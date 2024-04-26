@@ -28,6 +28,7 @@ async function run() {
 
     const database = client.db("pathwaypioneersDB");
     const countryCollection = database.collection("country");
+    const touristSpotCollection = database.collection("touristSpot")
 
     app.get('/country',async(req,res)=>{
         const  course = countryCollection.find()
@@ -35,6 +36,12 @@ async function run() {
         res.send(result)
     })
 
+    app.post('/touristspot',async (req,res)=> {
+      const newTouristSpot = req.body;
+      console.log(newTouristSpot);
+      const result = await touristSpotCollection.insertOne(newTouristSpot);
+      res.send(result)
+    })
 
 
 
