@@ -43,6 +43,23 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/touristspot',async(req,res)=>{
+      const course = touristSpotCollection.find()
+      const result = await course.toArray()
+      res.send(result)
+    })
+
+    app.get('/touristspot/:email',async(req,res)=>{
+      const email = req.params.email;
+
+      const filter = {
+        email: email
+      }
+      const course = touristSpotCollection.find(filter)
+      const result = await course.toArray()
+      res.send(result)
+    })
+
 
 
 
