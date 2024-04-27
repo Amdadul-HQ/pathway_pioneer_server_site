@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -31,8 +31,8 @@ async function run() {
     const touristSpotCollection = database.collection("touristSpot")
 
     app.get('/country',async(req,res)=>{
-        const  course = countryCollection.find()
-        const result = await course.toArray()
+        const  cursor = countryCollection.find()
+        const result = await cursor.toArray()
         res.send(result)
     })
 
@@ -43,20 +43,78 @@ async function run() {
       res.send(result)
     })
 
-    app.get('/touristspot',async(req,res)=>{
-      const course = touristSpotCollection.find()
-      const result = await course.toArray()
+    app.get('/touristspot/:id',async(req,res)=>{
+      const id = req.params.id;
+      const qurey = {
+        _id: new ObjectId(id)
+      }
+      const result = await touristSpotCollection.findOne(qurey)
       res.send(result)
     })
 
-    app.get('/touristspot/:email',async(req,res)=>{
+    app.get('/touristspot',async(req,res)=>{
+      const cursor = touristSpotCollection.find()
+      const result = await cursor.toArray()
+      res.send(result)
+    })
+
+    app.get('/touristspotCountry/:country',async(req,res)=>{
+      const countryName = req.params.country;
+      console.log(countryName);
+      const filter = {
+        country: countryName
+      }
+      console.log(filter);
+      const cursor = touristSpotCollection.find(filter)
+      const result = await cursor.toArray()
+      res.send(result)
+    })
+
+    app.get('/touristspotEmail/:email',async(req,res)=>{
       const email = req.params.email;
 
-      const filter = {
+      const qurey = {
         email: email
       }
-      const course = touristSpotCollection.find(filter)
-      const result = await course.toArray()
+      const cursor = touristSpotCollection.find(qurey)
+      const result = await cursor.toArray()
+      res.send(result)
+    })
+
+    app.put('/touristspot/:id',async(req,res)=>{
+      const id  = req.params.id;
+       console.log(id);
+       const updateSpot = req.body
+       const filter = {
+        _id : new ObjectId(id)
+       }
+       const options = { upsert: true };
+      //  country,tourists_spot_name,,average_cost,email,userName
+       const spot ={
+        $set:{
+          country:updateSpot.updatecountry,
+          tourists_spot:updateSpot.updatetourists_spot_name,
+          spot_location:updateSpot.updatespot_location,
+          short_description:updateSpot.updateshort_description,
+          bordered_radio:updateSpot.updatebordered_radio,
+          totalVisitorsPerYear:updateSpot.updatetotalVisitorsPerYear,
+          photourl:updateSpot.updatephotourl,
+          travel_time:updateSpot.updateaverage_cost,
+          average_cost:updateSpot.updatetravel_time,
+          email:updateSpot.updateemail,
+          userName:updateSpot.updateuserName
+        }
+       }
+       const result = await touristSpotCollection.updateOne(filter,spot,options)
+       res.send(result)
+    })
+
+    app.delete('/touristspot/:id',async(req,res)=>{
+      const id = req.params.id;
+      const qurey = {
+        _id: new ObjectId(id)
+      }
+      const result = await touristSpotCollection.deleteOne(qurey)
       res.send(result)
     })
 
