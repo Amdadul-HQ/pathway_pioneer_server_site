@@ -9,7 +9,6 @@ app.use(express.json())
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.p2unx4b.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
-
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -112,18 +111,12 @@ async function run() {
       const result = await touristSpotCollection.deleteOne(qurey)
       res.send(result)
     })
-
-    // Send a ping to confirm a successful connection
-    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
+    
   }
 }
 run().catch(console.dir);
-
-
-
-
 
 
 app.get('/',(req,res)=>{
