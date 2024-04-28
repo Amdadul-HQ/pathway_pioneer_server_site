@@ -83,7 +83,6 @@ async function run() {
         _id : new ObjectId(id)
        }
        const options = { upsert: true };
-      //  country,tourists_spot_name,,average_cost,email,userName
        const spot ={
         $set:{
           country:updateSpot.updatecountry,
